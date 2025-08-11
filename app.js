@@ -3,7 +3,7 @@
 function getCategories() {
   return JSON.parse(localStorage.getItem('categories')) || [];
 }
-function setCategories(cat ) {
+function setCategories(cats) {
   localStorage.setItem('categories', JSON.stringify(cats));
 }
 function ensureDefaultCategories() {
