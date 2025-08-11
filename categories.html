@@ -1,126 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Categories</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Expense Tracker — Categories</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
 </head>
 <body>
   <nav class="nav">
     <a href="index.html" class="brand">💸 Expense Tracker</a>
-    <a href="categories.html" class="link">Manage Categories</a>
+    <div class="links">
+      <a href="index.html" class="chip">Tracker</a>
+      <a href="categories.html" class="chip active">Categories</a>
+    </div>
   </nav>
 
-  <div class="container">
+
+  <div class="container" id="view-categories" aria-labelledby="nav-cats">
     <h2>Categories</h2>
-    <p>Create, rename, and remove categories. Deleting a category will move any of its transactions to 
+    <p class="subtle">
+      Create and remove categories. Deleting a category moves its transactions to
       <span class="badge-light">General</span>.
     </p>
 
     <form id="cat-form" class="form" autocomplete="off">
       <div class="form-control">
         <label for="cat-name">New category name</label>
-        <input id="cat-name" type="text" placeholder="e.g., Utilities"/>
+        <input id="cat-name" type="text" placeholder="Utilities"/>
       </div>
       <button class="btn" type="submit">Add Category</button>
     </form>
 
-    <h3>All Categories</h3>
+    <h3 style="margin-top:16px">All Categories</h3>
     <ul id="cat-list" class="category-list"></ul>
   </div>
-
-  <script>
-    const catListEl = document.getElementById('cat-list');
-    const catForm = document.getElementById('cat-form');
-    const catName = document.getElementById('cat-name');
-
-    function getCategories() {
-      return JSON.parse(localStorage.getItem('categories')) || [];
-    }
-
-    function setCategories(cats) {
-      localStorage.setItem('categories', JSON.stringify(cats));
-    }
-
-    function ensureDefaults() {
-      const existing = getCategories();
-      if (existing.length === 0) {
-        setCategories(['General', 'Food', 'Transport', 'Shopping', 'Salary']);
-      }
-    }
-
-    function render() {
-      ensureDefaults();
-      const cats = getCategories();
-      catListEl.innerHTML = '';
-      cats.forEach(cat => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span>${cat}</span>
-          <span>
-            <button class="delete-btn" data-cat="${cat}" title="Delete">×</button>
-          </span>
-        `;
-        catListEl.appendChild(li);
-      });
-
-      // Attach delete listeners
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const cat = btn.getAttribute('data-cat');
-          removeCategory(cat);
-        });
-      });
-    }
-
-    function removeCategory(cat) {
-      if (cat === 'General') {
-        alert('Cannot delete the default "General" category.');
-        return;
-      }
-      if (!confirm(`Delete "${cat}"? Transactions will be moved to "General".`)) {
-        return;
-      }
-
-      const updatedCats = getCategories().filter(c => c !== cat);
-      setCategories(updatedCats);
-
-      // Migrate transactions to General
-      const tx = JSON.parse(localStorage.getItem('transactions')) || [];
-      tx.forEach(t => {
-        if (t.category === cat) {
-          t.category = 'General';
-        }
-      });
-      localStorage.setItem('transactions', JSON.stringify(tx));
-
-      render();
-    }
-
-    catForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const name = catName.value.trim();
-
-      if (!name) {
-        alert('Category name cannot be empty.');
-        return;
-      }
-
-      const cats = getCategories();
-      // Prevent duplicates (case-insensitive)
-      if (cats.some(c => c.toLowerCase() === name.toLowerCase())) {
-        alert('Category already exists.');
-        return;
-      }
-
-      cats.push(name);
-      setCategories(cats);
-      catName.value = '';
-      render();
-    });
-
-    document.addEventListener('DOMContentLoaded', render);
-  </script>
 </body>
 </html>
