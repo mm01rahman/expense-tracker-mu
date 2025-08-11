@@ -1,7 +1,13 @@
 
 // ---------- Category Storage ----------
 function getCategories() {
-  return JSON.parse(localStorage.getItem('categories')) || [];
+  try {
+    const raw = localStorage.getItem('categories');
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 }
 function setCategories(cats) {
   localStorage.setItem('categories', JSON.stringify(cats));
