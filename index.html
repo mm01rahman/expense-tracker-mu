@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <nav class="nav">
+    <a href="index.html" class="brand">💸 Expense Tracker</a>
+    <a href="categories.html" class="link">Manage Categories</a>
+  </nav>
+
   <div class="container">
     <h2>Expense Tracker</h2>
     <h3>Your Balance</h3>
@@ -32,9 +37,18 @@
         <label for="text">Text</label>
         <input type="text" id="text" placeholder="Enter text..." />
       </div>
+
       <div class="form-control">
         <label for="amount">Amount</label>
         <input type="number" id="amount" placeholder="Enter amount..." />
+      </div>
+
+      <div class="form-control">
+        <label for="category">Category</label>
+        <select id="category"></select>
+        <small class="hint">
+          Need a new one? <a href="categories.html">Add it here</a> then come back.
+        </small>
       </div>
 
       <div class="form-control radio-group">
